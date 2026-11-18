@@ -1,26 +1,194 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Our Wedding Era design tokens.
+ * Brand colors from the brief. Dusty rose (#B98C94) and champagne gold
+ * (#C6A675) measure 2.7:1 and 2.2:1 against ivory, below WCAG minimums for any
+ * text, so they're used only for borders, fills and ornaments. Text uses
+ * espresso, burgundy, or the muted tone below (6.1:1 on ivory).
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #faf7f2;
+  --surface: #ffffff;
+  --surface-2: #f4ede5;
+  --surface-3: #ead7d5;
+  --text: #302827;
+  --muted: #6b5a58;
+  --line: #e8ddd3;
+  --line-strong: #d8c6bd;
+  --primary: #682d42;
+  --primary-hover: #57243a;
+  --primary-fg: #ffffff;
+  --accent: #c6a675;
+  --rose: #b98c94;
+  --danger: #9b2c2c;
+  --success: #2f6b4f;
+  --ring: #682d42;
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #1e1817;
+  --surface: #2a2221;
+  --surface-2: #332a28;
+  --surface-3: #3d3230;
+  --text: #f4ede5;
+  --muted: #bfaeaa;
+  --line: #43383a;
+  --line-strong: #5a4b4c;
+  --primary: #e6b8c2;
+  --primary-hover: #f0cbd3;
+  --primary-fg: #2a1219;
+  --accent: #c6a675;
+  --rose: #b98c94;
+  --danger: #e9a3a3;
+  --success: #8fd0ae;
+  --ring: #e6b8c2;
+  color-scheme: dark;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-fg: var(--primary-fg);
+  --color-accent: var(--accent);
+  --color-rose: var(--rose);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --font-serif: "Cormorant Garamond", "Cormorant", Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --radius-card: 1rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer base {
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+}
+
+.font-display {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.hairline {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.7;
+}
+
+.eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* Native dialog styling */
+dialog.sheet {
+  /* Tailwind's reset sets margin: 0, which un-centers native dialogs. */
+  margin: auto;
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+  background: var(--surface);
+  color: var(--text);
+  padding: 0;
+  width: min(36rem, calc(100vw - 1.5rem));
+  max-height: calc(100dvh - 2rem);
+}
+dialog.sheet::backdrop {
+  background: rgb(48 40 39 / 0.35);
+  backdrop-filter: blur(2px);
+}
+@media (max-width: 640px) {
+  dialog.sheet {
+    margin: auto 0 0 0;
+    width: 100vw;
+    max-width: 100vw;
+    border-radius: 1.25rem 1.25rem 0 0;
+  }
+}
+
+/* Milestone celebration */
+@keyframes petal-fall {
+  0% {
+    transform: translate3d(0, -10vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--drift), 105vh, 0) rotate(var(--spin));
+    opacity: 0;
+  }
+}
+.petal {
+  position: fixed;
+  top: 0;
+  width: 10px;
+  height: 14px;
+  border-radius: 60% 0 60% 0;
+  pointer-events: none;
+  animation: petal-fall var(--dur) ease-in forwards;
+  z-index: 60;
+}
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise-in {
+  animation: rise-in 0.35s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .petal {
+    display: none;
+  }
+  .rise-in {
+    animation: none;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
 }
